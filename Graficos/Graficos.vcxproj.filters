@@ -24,12 +24,18 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graficos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -39,6 +45,12 @@
     </None>
     <None Include="GLFW\glfw3.dll">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="vShaderSimple.shader">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="fShaderSimple.shader">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>
