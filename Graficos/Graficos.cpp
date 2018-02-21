@@ -9,9 +9,17 @@
 #include "GLFW\glfw3.h"
 
 #include <iostream>
+#include "Vertice.h"
+#include "Shader.h"
 using namespace std;
 
 GLfloat red, green, blue;
+
+vector<Vertice> triangulo;
+GLuint poicionID;
+GLuint vertexArrayID;
+GLuint bufferID;
+Shader *shader;
 
 void actualizar()
 {
@@ -28,19 +36,7 @@ void actualizar()
 
 }
 
-void dibujar()
-{
-	glBegin(GL_TRIANGLES); //Inicia la rutina con un modo de dibujo
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(-1.0f, 0.0f, 0.0f);
 
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(1.0f, 0.0f, 0.0f);
-	glEnd(); // Finaliza la rutina
-}
 
 int main()
 {
@@ -91,6 +87,20 @@ int main()
 	cout << "Version de OpenGL:" << version << endl;
 
 	red = green = blue = 0.0f;
+
+	//Inicializar triangulo
+	Vertice v1 = { vec3(-1,-0.5f,0.0f),vec4(1.0f,1.0f,1.0f,1.0f) };
+	Vertice v2 = { vec3(0.0f,0.5f,0.0f),vec4(1.0f,1.0f,1.0f,1.0f) };
+	Vertice v3 = { vec3(1.0f,-0.5f,0.0f),vec4(1.0f,1.0f,1.0f,1.0f) };
+
+	triangulo.push_back(v1);
+	triangulo.push_back(v2);
+	triangulo.push_back(v3);
+	//Crar instancia del shader
+	const char * rutaVertex = "vShaderSimple.shader";
+	const char * rutaFragment = "fShaderSimple.shader";
+
+	shader = new Shader(rutaVertex, rutaFragment);
 	//Ciclo de Dibujo
 	while (!glfwWindowShouldClose(window))
 	{
@@ -98,16 +108,13 @@ int main()
 		glViewport(0, 0, ancho, alto);
 		//Establecer el color con el que se limpia
 		glClearColor(red, green, blue, 1);
-
-		
-
 		
 		//Limpiar pantalla
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Rutina de Dibujo
 		actualizar();
-		dibujar();
+		
 
 		//Intercambio de Buffers
 		glfwSwapBuffers(window);
