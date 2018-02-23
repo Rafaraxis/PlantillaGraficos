@@ -16,7 +16,7 @@ using namespace std;
 GLfloat red, green, blue;
 
 vector<Vertice> triangulo;
-GLuint poicionID;
+GLuint posicionID;
 GLuint vertexArrayID;
 GLuint bufferID;
 Shader *shader;
@@ -35,7 +35,19 @@ void actualizar()
 	if (blue > 1) blue = 0;*/
 
 }
-
+void dibujar()
+{
+	//Enlazar el shader
+	shader->enlazarShader();
+	//Especificar el vertex array
+	glBindVertexArray(vertexArrayID);
+	//Dibujar
+	glDrawArrays(GL_TRIANGLES, 0, triangulo.size());
+	//Soltar el vertex array
+	glBindVertexArray(0);
+	//Soltar el shader
+	shader->desenlazarShader();
+}
 
 
 int main()
@@ -99,8 +111,32 @@ int main()
 	//Crar instancia del shader
 	const char * rutaVertex = "vShaderSimple.shader";
 	const char * rutaFragment = "fShaderSimple.shader";
-
 	shader = new Shader(rutaVertex, rutaFragment);
+
+
+
+	//Mapeo de atributos
+	posicionID = glGetAttribLocation(shader->getID(),"posicion");
+	//Desenlazar shader 
+	shader->desenlazarShader();
+	
+	//Crear un vertex array
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+	//Crear vertex buffer
+	glGenBuffers(1, &bufferID);
+	//De aqui en adelante se trabaja con este buffer
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	//Llenar el buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertice)* triangulo.size(), triangulo.data(), GL_STATIC_DRAW);
+	//Habilitar el atributo
+	glEnableVertexAttribArray(posicionID);
+	//Especificar a OpenGL como usar la memoria con ese atributo
+	glVertexAttribPointer(posicionID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertice), 0);
+	//Soltarlos
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER,0);
+
 	//Ciclo de Dibujo
 	while (!glfwWindowShouldClose(window))
 	{
@@ -114,6 +150,7 @@ int main()
 
 		//Rutina de Dibujo
 		actualizar();
+		dibujar();
 		
 
 		//Intercambio de Buffers
